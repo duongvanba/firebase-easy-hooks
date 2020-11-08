@@ -1,5 +1,5 @@
 import firebase from 'firebase/app'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useCache } from './useCache'
 
 class Queue {
