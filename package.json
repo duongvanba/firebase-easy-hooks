@@ -1,5 +1,8 @@
 {
-  "name": "react-firebase-hooks",
+  "name": "firebase-easy-hooks",
+  "repository": { 
+    "url": "https://github.com/duongvanba/firebase-easy-hooks"
+  },
   "version": "1.0.0",
   "description": "",
   "main": "build/index.js",
@@ -18,4 +21,4 @@
   },
   "author": "",
   "license": "ISC"
-}
+} 
