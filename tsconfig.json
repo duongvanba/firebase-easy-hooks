@@ -1,0 +1,23 @@
+{
+	"compilerOptions": {
+		"jsx": "preserve",
+		"lib": [
+			"dom",
+			"es2017"
+		],
+		"module": "CommonJS",
+		"target": "es6",
+		"outDir": "build",
+	},
+	"include": [
+		"src"
+	],
+	"exclude": [
+		"node_modules",
+		"build",
+		"out",
+		"bin",
+		"tests"
+	],
+	"files": ["src/index.ts"]
+}

@@ -1,0 +1,21 @@
+{
+  "name": "react-firebase-hooks",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "files": [
+    "build/**/*"
+  ],
+  "dependencies": {
+    "firebase": "^8.0.1",
+    "react": "^17.0.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build":"tsc -b ."
+  },
+  "author": "",
+  "license": "ISC"
+}
