@@ -60,7 +60,7 @@ export type useCollectionDataOptions<T extends {}, K extends keyof T = keyof T> 
 
 export const useCollectionData = <T extends {}, K extends keyof T = keyof T>(
 	ref: string,
-	options: Partial<useCollectionDataOptions<T, K>>
+	options: Partial<useCollectionDataOptions<T, K>> = {}
 ) => {
 	const { direction = 'desc', limit = 10, order_by, where = [] } = options
 
