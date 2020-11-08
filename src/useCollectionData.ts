@@ -44,22 +44,28 @@ class ListenerManager {
 	}
 }
 
-export const useCollectionData = <T extends {}, K extends keyof T = keyof T>(
-	ref: string,
+
+export type useCollectionDataOptions<T extends {}, K extends keyof T = keyof T> = {
 	where: Array<
 		[
 			fieldPath: K,
 			opStr: firebase.firestore.WhereFilterOp,
 			value: string | number | boolean,
 		]
-	> = [],
-	pagingBy: K = null,
-	limit: number = 10,
-	direction: 'desc' | 'asc' = 'desc',
+	>,
+	order_by: K,
+	limit: number,
+	direction: 'desc' | 'asc',
+}
+
+export const useCollectionData = <T extends {}, K extends keyof T = keyof T>(
+	ref: string,
+	options: Partial<useCollectionDataOptions<T, K>>
 ) => {
+	const { direction = 'desc', limit = 10, order_by, where = [] } = options
 
 	const isFilterQuery = ref?.split('/').length % 2 != 0
-	const [cache, update_cache] = useCache<T[]>(`${ref}#${JSON.stringify(where)}#${pagingBy}#${limit}#${direction}`)
+	const [cache, update_cache] = useCache<T[]>(`${ref}#${JSON.stringify(where)}#${order_by}#${limit}#${direction}`)
 
 	const [items, update_items] = useState<firebase.firestore.DocumentSnapshot<T>[]>([])
 
@@ -100,7 +106,7 @@ export const useCollectionData = <T extends {}, K extends keyof T = keyof T>(
 		for (const [fieldPath, opStr, value] of where) {
 			query = query.where(fieldPath as string, opStr, value)
 		}
-		pagingBy && (query = query.orderBy(pagingBy as any, direction))
+		order_by && (query = query.orderBy(order_by as any, direction))
 		startAfter && (query = query.startAfter(startAfter))
 		return query
 
@@ -151,7 +157,7 @@ export const useCollectionData = <T extends {}, K extends keyof T = keyof T>(
 			listeners.clear()
 			queue.clear()
 		}
-	}, [ref, JSON.stringify(where), limit, pagingBy, direction])
+	}, [ref, JSON.stringify(where), limit, order_by, direction])
 
 
 

@@ -14,6 +14,6 @@ export const useDocumentData = <
 		]
 	> = [],
 ) => {
-	const { data, loading, error } = useCollectionData<T>(ref, where)
+	const { data, loading, error } = useCollectionData<T>(ref, { where, limit: 1 })
 	return { data: data[0], loading, error }
 } 
