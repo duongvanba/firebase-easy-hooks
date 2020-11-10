@@ -90,10 +90,10 @@ export const useCollectionData = <T extends {}, K extends keyof T = keyof T>(
 		)
 
 		return [
-			...added,
 			...old_items
 				.filter(item => !removed.has(item.id))
-				.map(d => (modified.has(d.id) ? modified.get(d.id) : d))
+				.map(d => (modified.has(d.id) ? modified.get(d.id) : d)),
+			...added
 		]
 	}
 
