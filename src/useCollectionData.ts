@@ -48,15 +48,15 @@ class ListenerManager {
 export type useCollectionDataOptions<T extends {}, K extends keyof T = keyof T> = {
 	where: Array<
 		[
-			fieldPath: K,
-			opStr: firebase.firestore.WhereFilterOp,
-			value: string | number | boolean,
+			path: K,
+			compare_function: firebase.firestore.WhereFilterOp,
+			value: string | number | boolean | string[] | number[],
 		]
 	>,
 	order_by: K,
 	limit: number,
 	direction: 'desc' | 'asc',
-}
+} 
 
 export const useCollectionData = <T extends {}, K extends keyof T = keyof T>(
 	ref: string,

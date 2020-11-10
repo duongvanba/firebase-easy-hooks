@@ -8,9 +8,9 @@ export const useDocumentData = <
 	ref: string,
 	where: Array<
 		[
-			fieldPath: K,
-			opStr: firebase.firestore.WhereFilterOp,
-			value: string | number | boolean,
+			path: K,
+			compare_function: firebase.firestore.WhereFilterOp,
+			value: string | number | boolean | string[] | number[],
 		]
 	> = [],
 ) => {
