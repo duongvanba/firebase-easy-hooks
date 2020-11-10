@@ -56,7 +56,7 @@ export type useCollectionDataOptions<T extends {}, K extends keyof T = keyof T> 
 	order_by: K,
 	limit: number,
 	direction: 'desc' | 'asc',
-} 
+}
 
 export const useCollectionData = <T extends {}, K extends keyof T = keyof T>(
 	ref: string,
@@ -162,7 +162,7 @@ export const useCollectionData = <T extends {}, K extends keyof T = keyof T>(
 
 
 	return {
-		data: (loading && items.length == 0) ? cache : items.map(d => d.data()),
+		data: (loading && items.length == 0 && cache) ? cache : items.map(d => d.data()),
 		loading,
 		error,
 		fetch_more,
