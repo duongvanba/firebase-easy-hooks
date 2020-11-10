@@ -151,8 +151,8 @@ export const useCollectionData = <T extends {}, K extends keyof T = keyof T>(
 	}
 
 	useEffect(() => {
-		if (!ref) return
 		update_items([])
+		if (!ref) return
 		isFilterQuery ? fetch_more() : document_query()
 		return () => {
 			listeners.clear()

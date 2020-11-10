@@ -3,7 +3,7 @@
   "repository": { 
     "url": "https://github.com/duongvanba/firebase-easy-hooks"
   },
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "",
   "main": "build/index.js",
   "types": "build/index.d.ts",
