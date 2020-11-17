@@ -1,48 +1,11 @@
-import firebase from 'firebase/app'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useCache } from './useCache'
+import firebase from 'firebase'
+import { CallbackManager } from './CallbackManager'
 
-class Queue {
-	private queue = []
-	private running = false
 
-	push(fn: () => Promise<any>) {
-		this.queue.push(fn)
-		if (this.running) return
-		this.excute()
-	}
 
-	private async excute() {
-		this.running = true
-		while (this.queue.length > 0) {
-			const fn = this.queue.shift()
-			try {
-				await fn()
-			} catch (e) {
-				console.error({ e })
-			}
-		}
-		this.running = false
-	}
 
-	clear() {
-		this.queue = []
-	}
-}
-
-class ListenerManager {
-	private fns: Function[] = []
-
-	constructor() { }
-
-	push(fn: Function) {
-		this.fns.push(fn)
-	}
-
-	clear() {
-		this.fns.map(fn => fn())
-	}
-}
 
 
 export type useCollectionDataOptions<T extends {}, K extends keyof T = keyof T> = {
@@ -71,10 +34,7 @@ export const useCollectionData = <T extends {}, K extends keyof T = keyof T>(
 
 	const [{ error, has_more, loading }, setState] = useState({ loading: true, error: null, has_more: false })
 
-	const [listeners] = useState(new ListenerManager())
-	const [queue] = useState(new Queue())
-
-
+	const listeners = useRef(new CallbackManager())
 
 	function sync(old_items: firebase.firestore.DocumentSnapshot<T>[], docs: firebase.firestore.DocumentChange<T>[]) {
 
@@ -116,7 +76,7 @@ export const useCollectionData = <T extends {}, K extends keyof T = keyof T>(
 		const refs = ref.split('/')
 		const colelctionRef = refs.slice(0, refs.length - 1).join('/')
 		const documentId = refs[refs.length - 1]
-		listeners.push(
+		listeners.current.push(
 			firebase.firestore().collection(colelctionRef).doc(documentId).onSnapshot((snapshot: firebase.firestore.DocumentSnapshot<T>) => {
 				update_items([snapshot])
 				update_cache([snapshot.data()])
@@ -137,11 +97,11 @@ export const useCollectionData = <T extends {}, K extends keyof T = keyof T>(
 
 		const docs = await new Promise<firebase.firestore.DocumentChange<T>[]>(s => {
 			const query = filters_query_builder(startAfter, limit + 1)
-			listeners.push(
+			listeners.current.push(
 				query.onSnapshot(snapshot => {
 					const docs = snapshot.docChanges() as any as firebase.firestore.DocumentChange<T>[]
 					s(docs)
-					queue.push(async () => update_items(items => sync(items, docs.slice(0, limit))))
+					update_items(items => sync(items, docs.slice(0, limit)))
 				}, error_handler),
 			)
 		})
@@ -155,15 +115,14 @@ export const useCollectionData = <T extends {}, K extends keyof T = keyof T>(
 		if (!ref) return
 		isFilterQuery ? fetch_more() : document_query()
 		return () => {
-			listeners.clear()
-			queue.clear()
+			listeners.current.clear()
 		}
 	}, [ref, JSON.stringify(where), limit, order_by, direction])
 
-
+	const data: T[] = (loading && items.length == 0 && cache) ? cache : items.map(d => d.data())
 
 	return {
-		data: (loading && items.length == 0 && cache) ? cache : items.map(d => d.data()),
+		data,
 		loading,
 		error,
 		fetch_more,

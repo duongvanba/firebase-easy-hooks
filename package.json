@@ -1,9 +1,9 @@
 {
   "name": "firebase-easy-hooks",
-  "repository": { 
+  "repository": {
     "url": "https://github.com/duongvanba/firebase-easy-hooks"
   },
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -11,14 +11,15 @@
     "build/**/*"
   ],
   "dependencies": {
+    "@types/react": "^16.9.56",
     "firebase": "^8.0.1",
     "react": "^17.0.1"
   },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build":"tsc -b ."
+    "build": "tsc -b ."
   },
   "author": "",
   "license": "ISC"
-} 
+}
