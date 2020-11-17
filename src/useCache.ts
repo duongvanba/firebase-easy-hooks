@@ -4,7 +4,7 @@ import { useState } from "react";
 
 export function useCache<T>(key: string, defaultValue: T = null) {
 
-    const cacheValue = key && localStorage.getItem(key)
+    const cacheValue = key && typeof localStorage != 'undefined' && localStorage.getItem(key)
 
     const [state, setState] = useState<T>(cacheValue ? JSON.parse(cacheValue) : defaultValue)
 
