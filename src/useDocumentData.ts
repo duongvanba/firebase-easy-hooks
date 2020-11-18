@@ -8,7 +8,7 @@ export const useDocumentData = <
 	K extends keyof T = keyof T
 >(
 	ref: string,
-	options: FilterOptions<T, K> & CacheOptions
+	options: Partial<FilterOptions<T, K> & CacheOptions> = {}
 ) => {
 	const refs = ref.split('/')
 	const collectionRef = refs.slice(0, refs.length - 1).join('/')
