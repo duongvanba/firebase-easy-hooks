@@ -1,15 +1,10 @@
 import { useEffect, useState, useRef } from 'react'
-import { useCache } from './useCache'
+import { CacheOptions, useCache } from './useCache'
 import firebase from 'firebase'
 import { CallbackManager } from './CallbackManager'
 
 
 
-
-export type CacheOptions = {
-	cache: 'none' | 'local-storage' | 'session-storage' | 'always',
-	cache_timeout_ms: number
-}
 
 export type FilterOptions<T, K> = {
 	where: Array<
@@ -129,13 +124,18 @@ export const useCollectionData = <T extends {}, K extends keyof T = keyof T>(
 
 	const data: T[] = (loading && items.length == 0 && cache) ? cache : items.map(d => d.data())
 
+	async function add(data: Partial<T> & { id: string }) {
+		await firebase.firestore().collection(ref).add(data)
+	}
+
 	return {
 		data,
 		loading,
 		error,
 		fetch_more,
 		has_more,
-		empty: !loading && data.length == 0
+		empty: !loading && data.length == 0,
+		add
 	}
 }
 
