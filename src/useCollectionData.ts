@@ -6,9 +6,12 @@ import { CallbackManager } from './CallbackManager'
 
 
 
+export type CacheOptions = {
+	cache: 'none' | 'local-storage' | 'session-storage' | 'always',
+	cache_timeout_ms: number
+}
 
-
-export type useCollectionDataOptions<T extends {}, K extends keyof T = keyof T> = {
+export type FilterOptions<T, K> = {
 	where: Array<
 		[
 			path: K,
@@ -16,10 +19,15 @@ export type useCollectionDataOptions<T extends {}, K extends keyof T = keyof T> 
 			value: string | number | boolean | string[] | number[],
 		]
 	>,
+}
+
+export type PagingOptions<K> = {
 	order_by: K,
 	limit: number,
-	direction: 'desc' | 'asc',
+	direction: 'desc' | 'asc'
 }
+
+export type useCollectionDataOptions<T extends {}, K extends keyof T = keyof T> = PagingOptions<K> & FilterOptions<T, K> & CacheOptions
 
 export const useCollectionData = <T extends {}, K extends keyof T = keyof T>(
 	ref: string,
@@ -127,6 +135,7 @@ export const useCollectionData = <T extends {}, K extends keyof T = keyof T>(
 		error,
 		fetch_more,
 		has_more,
+		empty: !loading && data.length == 0
 	}
 }
 
