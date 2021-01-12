@@ -6,10 +6,19 @@ import firebase from 'firebase'
 export function useAuth() {
     const currentUser = firebase.auth().currentUser
     const [{ user, loading }, setState] = useState({ user: currentUser, loading: currentUser == null })
+    const [claims, set_claims] = useState({})
 
-    useEffect(() => firebase.auth().onAuthStateChanged(user => {
-        setState({ user, loading: false })
-    }), [])
+    async function getClaims() {
+        const { claims } = await firebase.auth().currentUser.getIdTokenResult()
+        set_claims(claims)
+    }
 
-    return { user, loading }
+    useEffect(() => {
+        firebase.auth().onAuthStateChanged(user => {
+            setState({ user, loading: false })
+        })
+        getClaims()
+    }, [])
+
+    return { user, loading, claims }
 }
