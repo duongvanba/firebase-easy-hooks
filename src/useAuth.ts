@@ -9,16 +9,14 @@ export function useAuth() {
     const [claims, set_claims] = useState({})
 
     async function getClaims() {
-        const { claims } = await firebase.auth().currentUser.getIdTokenResult()
-        set_claims(claims)
+        const { claims } = await firebase.auth().currentUser?.getIdTokenResult() || {}
+        claims && set_claims(claims)
     }
 
-    useEffect(() => {
-        firebase.auth().onAuthStateChanged(user => {
-            setState({ user, loading: false })
-        })
-        getClaims()
-    }, [])
+    useEffect(() => firebase.auth().onAuthStateChanged(user => {
+        setState({ user, loading: false })
+        user && getClaims()
+    }), [])
 
     return { user, loading, claims }
 }
