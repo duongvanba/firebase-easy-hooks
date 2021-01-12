@@ -9,7 +9,7 @@ export function useAuth() {
     const [claims, set_claims] = useState({})
 
     async function getClaims() {
-        const { claims } = await firebase.auth().currentUser?.getIdTokenResult() || {}
+        const { claims } = await firebase.auth().currentUser?.getIdTokenResult() || {} as any
         claims && set_claims(claims)
     }
 
