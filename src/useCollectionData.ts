@@ -122,11 +122,23 @@ export const useCollectionData = <T extends {}, K extends keyof T = keyof T>(
 		}
 	}, [ref, JSON.stringify(where), limit, order_by, direction])
 
-	const data: T[] = (loading && items.length == 0 && cache) ? cache : items.map(d => d.data())
+	const data: T[] = (loading && items.length == 0 && cache) ? cache : items.map(d => ({ id: d.id, ...d.data() }))
 
 	async function add(data: Partial<T> & { id: string }) {
-		await firebase.firestore().collection(ref).add(data)
+		if (data.id) {
+			await firebase.firestore().collection(ref).doc(data.id).set({
+				created_at: Date.now(),
+				...data
+			})
+		} else {
+			await firebase.firestore().collection(ref).add({
+				created_at: Date.now(),
+				...data
+			})
+		}
 	}
+
+
 
 	return {
 		data,
